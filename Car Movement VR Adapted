@@ -1,0 +1,40 @@
+using UnityEngine;
+
+public class CarController : MonoBehaviour
+{
+    // Variables for speed and turning
+    public float motorForce = 1000f;
+    public float turnSpeed = 15f;
+
+    // Rigidbody component of the car
+    private Rigidbody rb;
+
+    // Private variables for input
+    private float moveInput;
+    private float turnInput;
+
+    void Start()
+    {
+        // Get the Rigidbody component attached to the car
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void Update()
+    {
+        // Get the player's input (W/S for forward/backward, A/D for left/right)
+        moveInput = Input.GetAxis("Vertical");  // W/S or Up/Down arrow
+        turnInput = Input.GetAxis("Horizontal"); // A/D or Left/Right arrow
+    }
+
+    void FixedUpdate()
+    {
+        // Move the car forward or backward
+        Vector3 forwardMovement = transform.forward * moveInput * motorForce * Time.fixedDeltaTime;
+        rb.MovePosition(rb.position + forwardMovement);
+
+        // Rotate the car based on the player's input
+        float turn = turnInput * turnSpeed * Time.fixedDeltaTime;
+        Quaternion turnRotation = Quaternion.Euler(0f, turn, 0f);
+        rb.MoveRotation(rb.rotation * turnRotation);
+    }
+}
